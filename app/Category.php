@@ -10,7 +10,10 @@ class Category extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'name', 'email', 'password',
+        'category_name', 'category_description'
     ];
 
+    public function auctions() {
+        return $this->belongsTo(Auction::class);
+    }
 }

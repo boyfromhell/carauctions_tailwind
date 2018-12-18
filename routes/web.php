@@ -11,10 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Auth::routes();
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/auctions', 'AuctionController@index')->name('auctions-get');
+
+Route::group(['middleware' => ['auth']], function() {
+   Route::resource('auctions','AuctionController');
+
 });
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');

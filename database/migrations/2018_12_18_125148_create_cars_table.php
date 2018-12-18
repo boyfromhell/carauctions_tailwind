@@ -14,7 +14,16 @@ class CreateCarsTable extends Migration
     public function up()
     {
         Schema::create('cars', function (Blueprint $table) {
-            $table->increments('id');
+            $table->engine = 'InnoDB';
+
+            $table->increments('id')->unsigned();
+            $table->integer('auction_id')->unsigned();
+            $table->foreign('auction_id')
+                    ->references('id')
+                    ->on('auctions')
+                    ->onDelete('cascade')
+                    ->onUpdate('cascade');
+            $table->string('car_name');
             $table->string('car_brand');
             $table->string('car_model');
             $table->string('car_type');
@@ -32,6 +41,8 @@ class CreateCarsTable extends Migration
             $table->string('car_size_height');
             $table->string('car_size_width');          
             $table->timestamps();
+            $table->softDeletes();
+ 
         });
     }
 

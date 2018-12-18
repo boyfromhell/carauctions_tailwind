@@ -11,7 +11,14 @@ class Bid extends Model
 
     protected $table = 'bids';
     protected $fillable = [
-        'name', 'email', 'password',
+        'auction_id', 'user_id', 'bid_value'
     ];
 
+    public function auction() {
+        return $this->belongsTo(Auction::class);
+    }
+
+     public function user() {
+        return $this->belongsTo(User::class);
+    }
 }

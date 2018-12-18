@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Auction;
+use App\Category;
 use Illuminate\Http\Request;
 
 class AuctionController extends Controller
@@ -14,7 +15,13 @@ class AuctionController extends Controller
      */
     public function index()
     {
-        //
+        $auctions = Auction::paginate(5);
+        $categories = Category::all();
+
+        return view('admin.auctions.index', [
+            'auctions' => $auctions,
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -35,7 +42,31 @@ class AuctionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'auction_name'                  => 'required|min:5|max:50',
+            'auction_category_id'              => 'required',
+            'auction_short_description'     => 'required|max:255',
+            'auction_long_description'      => 'required|max:255',
+            'auction_startbid'              => 'required',
+            'auction_reserved_price'        => 'required',
+            'auction_startdate'             => 'required|date|after:today',
+            'auction_enddate'               =>  'required|date|after:auction_startdate',
+            'auction_visitdate'             => 'required|date',
+        ]);
+
+
+        if ($request->isMethod('post')) {
+            $auction = new Auction;
+            $auction->auction_name = request()->auction_name;
+            $auction->category_id = request()->auction_category;
+            $auction->auction_short_description = request()->auction_short_description;
+            $auction->auction_long_description = request()->auction_long_description;
+            $auction->auction_startdate = Carbon::parse(request()->auction_startdate);
+            $auction->auction_planned_closedate = Carbon::parse(request()->auction_planned_closedate);
+
+            $auction->save();
+        }
+        return back();
     }
 
     /**
